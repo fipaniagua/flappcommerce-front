@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  vue-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vue-vite-app
+    ports:
+      - "5001:5001"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    # Esta configuración permite que el contenedor acceda al host
+    # usando "host.docker.internal" en lugar de "localhost"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
