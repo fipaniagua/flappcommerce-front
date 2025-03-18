@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// App.vue
 </script>
 
 <template>
@@ -7,4 +8,4 @@
       <router-view />
     </div>
   </div>
-</template> 
+</template>
