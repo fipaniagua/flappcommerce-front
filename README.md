@@ -1,39 +1,45 @@
-# flappcommerce-front
+# E-commerce Vue App
 
-This template should help get you started developing with Vue 3 in Vite.
+A simple web application developed with Vue.js + shadcn-vue and TypeScript that simulates a shopping cart with shipping quote functionality.
 
-## Recommended IDE Setup
+## Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Generation of random carts from the DummyJSON API
+- Detailed visualization of products in the cart
+- Customer shipping data capture through a modal form
+- Shipping quotes through a mockup API service
+- Responsive design with modular and reusable components
 
-## Type Support for `.vue` Imports in TS
+## Setup
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+To set up the project:
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+```bash
+# Install dependencies
 npm install
-```
 
-### Compile and Hot-Reload for Development
-
-```sh
+# Start the development server on port 5001
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+The project will be available at `http://localhost:5001`
 
-```sh
-npm run build
-```
+## Project Structure
 
-### Lint with [ESLint](https://eslint.org/)
+- `src/api`: Services for API communication
+- `src/components`: Reusable components
+- `src/stores`: State management with Pinia
+- `src/types`: TypeScript type definitions
+- `src/views`: Main application views
 
-```sh
-npm run lint
-```
+## Backend
+
+The application communicates with two APIs:
+
+1. DummyJSON API: To obtain random cart data
+2. FlappCommerce API (mock): Simulation of a shipping quote service
+
+## Notes
+
+- The application is configured to run on port 5001
+- The backend API is expected to be running on port 3000
