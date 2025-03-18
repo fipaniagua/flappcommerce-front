@@ -19,14 +19,15 @@ export interface Product {
   }
   
   export interface ShippingInfo {
-    estimatedDelivery: string;
-    shippingCost: number;
-    options: ShippingOption[];
+    price: number | null;
+    courier: string | null;
+    isAvailable: boolean;
+    message?: string;
   }
-  
-  export interface ShippingOption {
-    id: number;
+
+  export interface CustomerData {
     name: string;
-    price: number;
+    shipping_street: string;
+    commune: string;
+    phone: string;
   }
-  

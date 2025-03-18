@@ -62,12 +62,12 @@ onMounted(() => {
         <p class="mb-6 text-gray-600">¡Genera un carrito aleatorio para comenzar a comprar!</p>
         
         <Button 
-          :loading="cartStore.loading" 
+          :loading="cartStore.loadingCart" 
           @click="generateRandomCart"
         >
-          Generar carrito test
+          Generar carrito
         </Button>
       </div>
     </main>
   </div>
-</template> 
+</template>

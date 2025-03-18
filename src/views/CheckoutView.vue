@@ -1,18 +1,42 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Button } from '@/components/ui/button';
 import CartItem from '@/components/cart/cartItem.vue';
 import CartSummary from '@/components/cart/cartSummary.vue';
 import { useCartStore } from '../stores/cartStore';
+import type { CustomerData } from '@/types/cart';
+import CustomerDataForm from '@/components/cart/customerDataForm.vue';
+import Modal from '@/components/ui/Modal.vue';
 
 const cartStore = useCartStore();
 const router = useRouter();
+const showCustomerDataModal = ref(false);
 
 const goBack = () => {
   router.push({ name: 'home' });
 };
 
+const openCustomerDataModal = () => {
+  showCustomerDataModal.value = true;
+};
+
+const closeCustomerDataModal = () => {
+  showCustomerDataModal.value = false;
+};
+
+const handleCustomerDataSubmit = (data: CustomerData) => {
+  cartStore.setCustomerData(data);
+  closeCustomerDataModal();
+  getShippingQuote();
+};
+
 const getShippingQuote = async () => {
+  if (!cartStore.hasCustomerData) {
+    openCustomerDataModal();
+    return;
+  }
+
   try {
     await cartStore.getShippingQuote();
   } catch (error) {
@@ -42,9 +66,9 @@ const clearCart = () => {
           <h2 class="font-semibold text-gray-900">Productos en tu carrito</h2>
         </div>
         
-        <div v-if="cartStore.loading" class="flex justify-center items-center py-12">
+        <div v-if="cartStore.isLoadingCart" class="flex justify-center items-center py-12">
           <div class="inline-block h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-          <span class="ml-2 text-gray-600">Cargando...</span>
+          <span class="ml-2 text-gray-600">Cargando productos...</span>
         </div>
         
         <div v-else>
@@ -53,6 +77,29 @@ const clearCart = () => {
             :key="product.id" 
             :item="product"
           />
+        </div>
+        
+        <!-- Datos del cliente (si existen) -->
+        <div v-if="cartStore.customerData" class="p-4 bg-gray-50 border-t">
+          <h3 class="font-semibold text-gray-900 mb-2">Datos de envío</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+            <div>
+              <span class="text-gray-600">Nombre:</span>
+              <span class="ml-2 font-medium">{{ cartStore.customerData.name }}</span>
+            </div>
+            <div>
+              <span class="text-gray-600">Teléfono:</span>
+              <span class="ml-2">{{ cartStore.customerData.phone }}</span>
+            </div>
+            <div>
+              <span class="text-gray-600">Dirección:</span>
+              <span class="ml-2">{{ cartStore.customerData.shipping_street }}</span>
+            </div>
+            <div>
+              <span class="text-gray-600">Comuna:</span>
+              <span class="ml-2">{{ cartStore.customerData.commune }}</span>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -65,11 +112,10 @@ const clearCart = () => {
           <template #actions>
             <Button 
               class="w-full" 
-              :loading="cartStore.loading" 
-              :disabled="!!cartStore.shippingInfo" 
+              :loading="cartStore.isLoadingShipping" 
               @click="getShippingQuote"
             >
-              Cotizar despacho
+              {{ cartStore.hasCustomerData ? 'Recotizar despacho' : 'Cotizar despacho' }}
             </Button>
             
             <Button 
@@ -87,5 +133,14 @@ const clearCart = () => {
         </div>
       </div>
     </div>
+    
+    <!-- Modal para datos del cliente -->
+    <Modal :show="showCustomerDataModal" title="Ingresa tus datos de envío" @close="closeCustomerDataModal">
+      <CustomerDataForm 
+        :initial-data="cartStore.customerData || undefined" 
+        @submit="handleCustomerDataSubmit" 
+        @cancel="closeCustomerDataModal"
+      />
+    </Modal>
   </div>
 </template>
